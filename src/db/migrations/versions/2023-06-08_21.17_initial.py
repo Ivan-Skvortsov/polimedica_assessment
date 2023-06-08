@@ -1,18 +1,23 @@
 """initial
 
-Revision ID: a5cd34316b1f
+Revision ID: f5e485049de7
 Revises:
-Create Date: 2023-06-08 17:48:29.299165
+Create Date: 2023-06-08 21:17:36.279816
 
 """
 import sqlalchemy as sa
 from alembic import op
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'a5cd34316b1f'
+revision = 'f5e485049de7'
 down_revision = None
 branch_labels = None
 depends_on = None
+
+STUDENT_GENDER_TYPE = sa.Enum('MALE', 'FEMALE', name='student_gender')
+STUDENT_GENDER_TYPE_PG = postgresql.ENUM('MALE', 'FEMALE', name='student_gender')
+STUDENT_GENDER_TYPE.with_variant(STUDENT_GENDER_TYPE_PG, 'postgresql')
 
 
 def upgrade() -> None:
@@ -23,45 +28,45 @@ def upgrade() -> None:
     sa.Column('street', sa.String(length=100), nullable=False),
     sa.Column('house', sa.SmallInteger(), nullable=False),
     sa.Column('postal_code', sa.Integer(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
     op.create_table('course',
     sa.Column('name', sa.String(length=20), nullable=False),
     sa.Column('hours', sa.SmallInteger(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('department',
     sa.Column('name', sa.String(length=20), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('grade',
     sa.Column('score', sa.SmallInteger(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('semester',
     sa.Column('number', sa.SmallInteger(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('classroom',
     sa.Column('number', sa.SmallInteger(), nullable=False),
-    sa.Column('building_id', sa.Uuid(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('building_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.ForeignKeyConstraint(['building_id'], ['building.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('course_programme',
-    sa.Column('course_id', sa.Uuid(), nullable=False),
+    sa.Column('course_id', sa.UUID(), nullable=False),
     sa.Column('title', sa.String(length=100), nullable=False),
     sa.Column('descritpion', sa.Text(), nullable=False),
     sa.Column('hours', sa.SmallInteger(), nullable=False),
-    sa.Column('semester_id', sa.Uuid(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('semester_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.ForeignKeyConstraint(['course_id'], ['course.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['semester_id'], ['semester.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -69,17 +74,17 @@ def upgrade() -> None:
     op.create_table('faculty',
     sa.Column('name', sa.String(length=100), nullable=False),
     sa.Column('phone_number', sa.String(length=16), nullable=False),
-    sa.Column('building_id', sa.Uuid(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('building_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.ForeignKeyConstraint(['building_id'], ['building.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('group',
     sa.Column('name', sa.String(length=20), nullable=False),
     sa.Column('year_of_entry', sa.SmallInteger(), nullable=False),
-    sa.Column('faculty_id', sa.Uuid(), nullable=False),
-    sa.Column('department_id', sa.Uuid(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('faculty_id', sa.UUID(), nullable=False),
+    sa.Column('department_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.ForeignKeyConstraint(['department_id'], ['department.id'], ),
     sa.ForeignKeyConstraint(['faculty_id'], ['faculty.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -89,23 +94,23 @@ def upgrade() -> None:
     sa.Column('surname', sa.String(length=30), nullable=False),
     sa.Column('patronymic', sa.String(length=30), nullable=True),
     sa.Column('degree', sa.String(length=20), nullable=False),
-    sa.Column('faculty_id', sa.Uuid(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('faculty_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.ForeignKeyConstraint(['faculty_id'], ['faculty.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_teacher_surname'), 'teacher', ['surname'], unique=False)
     op.create_table('course_teacher',
-    sa.Column('course_id', sa.Uuid(), nullable=True),
-    sa.Column('teacher_id', sa.Uuid(), nullable=True),
+    sa.Column('course_id', sa.UUID(), nullable=True),
+    sa.Column('teacher_id', sa.UUID(), nullable=True),
     sa.ForeignKeyConstraint(['course_id'], ['course.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['teacher_id'], ['teacher.id'], ondelete='CASCADE')
     )
     op.create_table('curriculum',
-    sa.Column('group_id', sa.Uuid(), nullable=False),
-    sa.Column('course_id', sa.Uuid(), nullable=False),
-    sa.Column('semester_id', sa.Uuid(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('group_id', sa.UUID(), nullable=False),
+    sa.Column('course_id', sa.UUID(), nullable=False),
+    sa.Column('semester_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.ForeignKeyConstraint(['course_id'], ['course.id'], ),
     sa.ForeignKeyConstraint(['group_id'], ['group.id'], ),
     sa.ForeignKeyConstraint(['semester_id'], ['semester.id'], ),
@@ -115,23 +120,23 @@ def upgrade() -> None:
     sa.Column('name', sa.String(length=30), nullable=False),
     sa.Column('surname', sa.String(length=30), nullable=False),
     sa.Column('patronymic', sa.String(length=30), nullable=True),
-    sa.Column('gender', sa.Enum('MALE', 'FEMALE', name='student_gender'), nullable=False),
+    sa.Column('gender', STUDENT_GENDER_TYPE, nullable=False),
     sa.Column('date_of_birth', sa.DATE(), nullable=False),
-    sa.Column('group_id', sa.Uuid(), nullable=True),
+    sa.Column('group_id', sa.UUID(), nullable=True),
     sa.Column('year_of_entry', sa.SmallInteger(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.ForeignKeyConstraint(['group_id'], ['group.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_student_surname'), 'student', ['surname'], unique=False)
     op.create_table('timetable',
-    sa.Column('group_id', sa.Uuid(), nullable=False),
+    sa.Column('group_id', sa.UUID(), nullable=False),
     sa.Column('day_of_week', sa.SmallInteger(), nullable=False),
     sa.Column('lesson_number', sa.SmallInteger(), nullable=False),
-    sa.Column('course_id', sa.Uuid(), nullable=False),
-    sa.Column('teacher_id', sa.Uuid(), nullable=False),
-    sa.Column('classroom_id', sa.Uuid(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('course_id', sa.UUID(), nullable=False),
+    sa.Column('teacher_id', sa.UUID(), nullable=False),
+    sa.Column('classroom_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.ForeignKeyConstraint(['classroom_id'], ['classroom.id'], ),
     sa.ForeignKeyConstraint(['course_id'], ['course.id'], ),
     sa.ForeignKeyConstraint(['group_id'], ['group.id'], ),
@@ -140,12 +145,12 @@ def upgrade() -> None:
     )
     op.create_table('exam',
     sa.Column('exam_date', sa.DATE(), nullable=False),
-    sa.Column('student_id', sa.Uuid(), nullable=False),
-    sa.Column('grade_id', sa.Uuid(), nullable=False),
-    sa.Column('course_id', sa.Uuid(), nullable=False),
-    sa.Column('semester_id', sa.Uuid(), nullable=False),
-    sa.Column('teacher_id', sa.Uuid(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('student_id', sa.UUID(), nullable=False),
+    sa.Column('grade_id', sa.UUID(), nullable=False),
+    sa.Column('course_id', sa.UUID(), nullable=False),
+    sa.Column('semester_id', sa.UUID(), nullable=False),
+    sa.Column('teacher_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.ForeignKeyConstraint(['course_id'], ['course.id'], ),
     sa.ForeignKeyConstraint(['grade_id'], ['grade.id'], ),
     sa.ForeignKeyConstraint(['semester_id'], ['semester.id'], ),
@@ -160,11 +165,11 @@ def upgrade() -> None:
     sa.Column('date_created', sa.DATE(), nullable=False),
     sa.Column('date_due', sa.DATE(), nullable=False),
     sa.Column('is_completed', sa.Boolean(), nullable=False),
-    sa.Column('student_id', sa.Uuid(), nullable=False),
-    sa.Column('grade_id', sa.Uuid(), nullable=False),
-    sa.Column('teacher_id', sa.Uuid(), nullable=False),
-    sa.Column('course_id', sa.Uuid(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('student_id', sa.UUID(), nullable=False),
+    sa.Column('grade_id', sa.UUID(), nullable=False),
+    sa.Column('teacher_id', sa.UUID(), nullable=False),
+    sa.Column('course_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.ForeignKeyConstraint(['course_id'], ['course.id'], ),
     sa.ForeignKeyConstraint(['grade_id'], ['grade.id'], ),
     sa.ForeignKeyConstraint(['student_id'], ['student.id'], ),
@@ -197,4 +202,5 @@ def downgrade() -> None:
     op.drop_table('department')
     op.drop_table('course')
     op.drop_table('building')
+    STUDENT_GENDER_TYPE.drop(op.get_bind(), checkfirst=True)
     # ### end Alembic commands ###

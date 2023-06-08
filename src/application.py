@@ -1,9 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.api.routers import student_router
+
 
 def create_app() -> FastAPI:
     app = FastAPI()
+    app.include_router(student_router)
 
     # TODO
     origins = ["*"]

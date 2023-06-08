@@ -15,8 +15,8 @@ class Student(Base):
     class Gender(str, enum.Enum):
         """Пол."""
 
-        MALE = "male"
-        FEMALE = "female"
+        MALE = "MALE"
+        FEMALE = "FEMALE"
 
     __tablename__ = "student"
 

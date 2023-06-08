@@ -1,0 +1,16 @@
+from .base import Base  # noqa
+from .building import Building  # noqa
+from .classroom import ClassRoom  # noqa
+from .course import Course  # noqa
+from .course_programme import CourseProgramme  # noqa
+from .curriculum import Curriculum  # noqa
+from .department import Department  # noqa
+from .exam import Exam  # noqa
+from .faculty import Faculty  # noqa
+from .grade import Grade  # noqa
+from .group import Group  # noqa
+from .independent_assignment import IndependentAssignment  # noqa
+from .semester import Semester  # noqa
+from .student import Student  # noqa
+from .teacher import Teacher  # noqa
+from .timetable import TimeTable  # noqa

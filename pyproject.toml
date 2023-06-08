@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "polimedica-assessment"
+version = "0.1.0"
+description = "Polimedica job assessment task"
+authors = ["Ivan Skvortsov <pprofcheg@gmail.com>"]
+readme = "README.md"
+packages = [{include = "polimedica_assessment"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+python-dotenv = "^1.0.0"
+fastapi = "^0.96.0"
+uvicorn = "^0.22.0"
+sqlalchemy = "^2.0.15"
+alembic = "^1.11.1"
+asyncpg = "^0.27.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.3.2"
+flake8 = "^6.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,17 @@
+version: '3.8'
+
+volumes:
+  polimedica_assessment_volume:
+
+services:
+
+  polimedica_assessment_db:
+    image: postgres:15.2
+    container_name: polimedica_assessment_db
+    restart: always
+    volumes:
+      - polimedica_assessment_volume:/var/lib/postgresql/data/
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    env_file:
+      - ./.env

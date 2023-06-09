@@ -19,5 +19,13 @@ router = APIRouter(prefix="/teachers", tags=["Teachers"])
 async def get_all_teachers(
     teacher_crud: TeacherCRUD = Depends()
 ) -> list[TeacherResponse]:
-    """Список всех преподавателей."""  # TODO описание
+    """Получает список всех преподавателей.
+
+    - **id**: уникальный идентификатор преподавателя
+    - **surname**: фамилия преподавателя
+    - **name**: имя преподавателя
+    - **patronymic**: отчество преподавателя (при наличии)
+    - **degree**: ученая степень преподавателя
+    - **faculty_id**: уникальный идентификатор факультета (при наличии).
+    """
     return await teacher_crud.get_all()

@@ -24,7 +24,15 @@ async def create_student(
     student_data: StudentCreateRequest,
     student_crud: StudentCRUD = Depends()
 ) -> StudentResponse:
-    """Создать нового студента."""  # TODO описание
+    """Создаёт нового студента.
+
+    - **surname**: фамилия студента
+    - **name**: имя студента
+    - **patronymic**: отчетво студента (при наличии)
+    - **gender**: пол (MALE|FEMALE)
+    - **date_of_birth**: дата рождения студента
+    - **year_of_entry**: год поступления в ВУЗ.
+    """
     student = Student(**student_data.dict())
     return await student_crud.create(student)
 
@@ -41,7 +49,7 @@ async def get_student(
     student_id: UUID,
     student_crud: StudentCRUD = Depends()
 ) -> StudentResponse:
-    """Получить информацию о студенте по его id.
+    """Получает информацию о студенте по его id.
 
     - **id**: уникальный иднетификатор студента
     - **name**: имя студента
@@ -50,7 +58,7 @@ async def get_student(
     - **gender**: пол студента
     - **date_of_birth**: дата рождения студента
     - **group_id**: ИД группы, в которой обучается студент (при наличии)
-    - **year_of_entry**: год поступления в ВУЗ
+    - **year_of_entry**: год поступления в ВУЗ.
     """
     return await student_crud.get(student_id)
 
@@ -68,7 +76,17 @@ async def update_student(
     student_data: StudentUpdateRequest,
     student_crud: StudentCRUD = Depends()
 ) -> StudentResponse:
-    """Обновить информацию о студенте."""  # TODO описание
+    """Обновляет информацию о студенте.
+
+    - **id**: уникальный иднетификатор студента
+    - **name**: имя студента
+    - **surname**: фамилия студента
+    - **patronymic**: отчество студента (при наличии)
+    - **gender**: пол студента
+    - **date_of_birth**: дата рождения студента
+    - **group_id**: ИД группы, в которой обучается студент (при наличии)
+    - **year_of_entry**: год поступления в ВУЗ.
+    """
     student = Student(**student_data.dict())
     return await student_crud.update(student_id, student)
 
@@ -82,5 +100,5 @@ async def delete_student(
     student_id: UUID,
     student_crud: StudentCRUD = Depends()
 ) -> None:
-    """Удалить студента."""  # TODO описание
+    """Удаляет студента."""
     return await student_crud.delete(student_id)

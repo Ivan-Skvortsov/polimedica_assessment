@@ -24,7 +24,11 @@ async def create_course(
     course_data: CourseCreateRequest,
     course_crud: CourseCRUD = Depends()
 ) -> CourseResponse:
-    """Создаёт новый курс."""  # TODO описание
+    """Создаёт новый курс.
+
+    - **name**: название курса
+    - **hours**: количество часов в курсе.
+    """
     course = Course(**course_data.dict())
     return await course_crud.create(course)
 
@@ -41,7 +45,12 @@ async def get_course(
     course_id: UUID,
     course_crud: CourseCRUD = Depends()
 ) -> CourseResponse:
-    """Получить информацию о курсе по его id."""  # TODO описание
+    """Получает информацию о курсе по его id.
+
+    - **id**: уникальный идентификатор курса
+    - **name**: название курса
+    - **hours**: количество часов в курсе.
+    """
     return await course_crud.get(course_id)
 
 
@@ -57,5 +66,15 @@ async def get_student(
     course_id: UUID,
     course_crud: CourseCRUD = Depends()
 ) -> list[StudentResponse]:
-    """Получить список всех студентов на курсе."""  # TODO описание
+    """Получает список всех студентов на курсе.
+
+    - **id**: уникальный иднетификатор студента
+    - **name**: имя студента
+    - **surname**: фамилия студента
+    - **patronymic**: отчество студента (при наличии)
+    - **gender**: пол студента
+    - **date_of_birth**: дата рождения студента
+    - **group_id**: ИД группы, в которой обучается студент (при наличии)
+    - **year_of_entry**: год поступления в ВУЗ.
+    """
     return await course_crud.get_course_students(course_id)

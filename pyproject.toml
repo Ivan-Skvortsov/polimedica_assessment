@@ -19,6 +19,8 @@ asyncpg = "^0.27.0"
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.2"
 flake8 = "^6.0.0"
+factory-boy = "^3.2.1"
+psycopg2-binary = "^2.9.6"
 
 [build-system]
 requires = ["poetry-core"]

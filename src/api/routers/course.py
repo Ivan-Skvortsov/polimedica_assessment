@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends
 
 from src.api.schemas.request.course import CourseCreateRequest
 from src.api.schemas.response.course import CourseResponse
+from src.api.schemas.response.student import StudentResponse
 from src.db.crud.course import CourseCRUD
 from src.db.models import Course
 
@@ -36,9 +37,25 @@ async def create_course(
     summary="Получить информацию о курсе по его id.",
     response_description="Информация о курсе."
 )
-async def get_student(
+async def get_course(
     course_id: UUID,
     course_crud: CourseCRUD = Depends()
 ) -> CourseResponse:
     """Получить информацию о курсе по его id."""  # TODO описание
     return await course_crud.get(course_id)
+
+
+@router.get(
+    "/{course_id}/students",
+    response_model=list[StudentResponse],
+    response_model_exclude_none=True,
+    status_code=HTTPStatus.OK,
+    summary="Получить список всех студентов на курсе.",
+    response_description="Информация о студентах курса."
+)
+async def get_student(
+    course_id: UUID,
+    course_crud: CourseCRUD = Depends()
+) -> list[StudentResponse]:
+    """Получить список всех студентов на курсе."""  # TODO описание
+    return await course_crud.get_course_students(course_id)

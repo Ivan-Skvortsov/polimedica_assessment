@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from sqlalchemy import ForeignKey, SmallInteger
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db.models import Base
 
@@ -17,3 +17,5 @@ class TimeTable(Base):
     course_id: Mapped[UUID] = mapped_column(ForeignKey("course.id"))
     teacher_id: Mapped[UUID] = mapped_column(ForeignKey("teacher.id"))
     classroom_id: Mapped[UUID] = mapped_column(ForeignKey("classroom.id"))
+
+    groups: Mapped[list["Group"]] = relationship()  # noqa

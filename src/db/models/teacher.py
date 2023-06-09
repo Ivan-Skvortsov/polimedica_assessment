@@ -17,6 +17,6 @@ class Teacher(Base):
     surname: Mapped[str] = mapped_column(String(30), index=True)
     patronymic: Mapped[Optional[str]] = mapped_column(String(30))
     degree: Mapped[str] = mapped_column(String(20))
-    faculty_id: Mapped[UUID] = mapped_column(ForeignKey("faculty.id"))
+    faculty_id: Mapped[Optional[UUID]] = mapped_column(ForeignKey("faculty.id"))  # noqa
 
     courses: Mapped[list["Course"]] = relationship(secondary=course_teacher)  # noqa

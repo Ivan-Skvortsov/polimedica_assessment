@@ -3,13 +3,15 @@ from http import HTTPStatus
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.api import routers
 from src.api.exception_handlers import internal_server_error_handler
-from src.api.routers import student_router
 
 
 def create_app() -> FastAPI:
     app = FastAPI()
-    app.include_router(student_router)
+    app.include_router(routers.student_router)
+    app.include_router(routers.teacher_router)
+    app.include_router(routers.course_router)
 
     # TODO
     origins = ["*"]

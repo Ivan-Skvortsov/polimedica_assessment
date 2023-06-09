@@ -35,7 +35,7 @@ async def create_student(
     response_model_exclude_none=True,
     status_code=HTTPStatus.OK,
     summary="Получить информацию о студенте по его id.",
-    response_description="Информация о созданном студенте."
+    response_description="Информация о студенте."
 )
 async def get_student(
     student_id: UUID,
@@ -52,7 +52,7 @@ async def get_student(
     - **group_id**: ИД группы, в которой обучается студент (при наличии)
     - **year_of_entry**: год поступления в ВУЗ
     """
-    return await student_crud.get_one_or_none(student_id)
+    return await student_crud.get(student_id)
 
 
 @router.put(

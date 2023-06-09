@@ -9,5 +9,5 @@ class Course(Base):
 
     __tablename__ = "course"
 
-    name: Mapped[str] = mapped_column(String(20))
+    name: Mapped[str] = mapped_column(String(100))
     hours: Mapped[int] = mapped_column(SmallInteger)

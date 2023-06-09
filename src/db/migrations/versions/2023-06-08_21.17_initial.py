@@ -33,7 +33,7 @@ def upgrade() -> None:
     sa.UniqueConstraint('name')
     )
     op.create_table('course',
-    sa.Column('name', sa.String(length=20), nullable=False),
+    sa.Column('name', sa.String(length=100), nullable=False),
     sa.Column('hours', sa.SmallInteger(), nullable=False),
     sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
@@ -94,7 +94,7 @@ def upgrade() -> None:
     sa.Column('surname', sa.String(length=30), nullable=False),
     sa.Column('patronymic', sa.String(length=30), nullable=True),
     sa.Column('degree', sa.String(length=20), nullable=False),
-    sa.Column('faculty_id', sa.UUID(), nullable=False),
+    sa.Column('faculty_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
     sa.ForeignKeyConstraint(['faculty_id'], ['faculty.id'], ),
     sa.PrimaryKeyConstraint('id')

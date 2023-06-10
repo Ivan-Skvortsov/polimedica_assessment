@@ -372,7 +372,7 @@ WHERE course.name LIKE 'Математика';
 ```SQL
 UPDATE exam
 	SET grade_id=(SELECT grade.id FROM grade WHERE score = 4)
-	WHERE 
+	WHERE
 		student_id = '<айди тудента>' AND
 		course_id = (SELECT course.id FROM course WHERE course.name LIKE 'Математика') AND
 		semester_id = (SELECT semester.id FROM semester WHERE semester.number = 3);

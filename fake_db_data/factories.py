@@ -10,7 +10,7 @@ session = scoped_session(sessionmaker(bind=engine))
 
 
 def lazy_fk_ids(model):
-    """Получает id модели из БД для использования в качестве внешних ключей."""
+    """Выгружает id модели из БД для использования их в качестве внешних ключей."""  # noqa
     yield from (session.scalars(select(model.id)))
 
 

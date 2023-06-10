@@ -341,22 +341,83 @@ CREATE INDEX IF NOT EXISTS ix_teacher_surname
 <div id="часть-2"></div>
 
 ## Часть 2: SQL-запросы
-  "запрос-1"
-  Выбрать всех студентов, обучающихся на курсе "Математика"
 
-  "запрос-2"
-  Обновить оценку студента по курсу.
+<div id="запрос-1"></div>
 
-  "запрос-3"
-  Выбрать всех преподавателей, которые преподают в здании №3.
+###  1. Выбрать всех студентов, обучающихся на курсе "Математика"
 
-  "запрос-4"
-  Удалить задание для самостоятельной работы, которое было создано более года назад
+Студенты учится в группе, у группы есть расписание занятий, в расписании занятий встречается нужный нам курс. Т.е. необходимо объединить 4 таблицы: студент, группа, расписание, курс.
+```SQL
+SELECT
+	student.id,
+	student.surname,
+	student.name,
+	student.patronymic,
+	student.gender,
+	student.date_of_birth,
+	student.group_id,
+	student.year_of_entry
+FROM student JOIN "group" on student.group_id = "group".id
+			 JOIN timetable on "group".id = timetable.group_id
+			 JOIN course on timetable.course_id = course.id
+WHERE course.name LIKE 'Математика';
+```
 
-  "запрос-5"
-  Добавить новый семестр в учебный год
 
-<p align="right">(<a href="#top">наверх</a>)</p>
+<div id="запрос-2"></div>
+
+### 2. Обновить оценку студента по курсу
+
+За оценку студент по курсу принимаем оценку за экзамен по курсу. Т.е. нужно выбранному студенту обновить оценку по экзамену за курс в нужном семестре.
+```SQL
+UPDATE exam
+	SET grade_id=(SELECT grade.id FROM grade WHERE score = 4)
+	WHERE 
+		student_id = '<айди тудента>' AND
+		course_id = (SELECT course.id FROM course WHERE course.name LIKE 'Математика') AND
+		semester_id = (SELECT semester.id FROM semester WHERE semester.number = 3);
+```
+
+<div id="запрос-3"></div>
+
+### 3. Выбрать всех преподавателей, которые преподают в здании №3
+
+Преподаватель ведет предметы и это учтено в расписании, в расписании указана аудитория, аудитория находится в здании. Т.е. нужно объединить 4 таблицы: предподаватель, расписание, аудитория, здание
+```SQL
+SELECT
+	teacher.id,
+	teacher.name,
+	teacher.surname,
+	teacher.patronymic,
+	teacher.degree
+FROM teacher JOIN timetable ON timetable.teacher_id = teacher.id
+			 JOIN classroom ON timetable.classroom_id = classroom.id
+			 JOIN building ON classroom.building_id = building.id
+WHERE building.name LIKE 'Здание №3';
+```
+
+
+<div id="запрос-4"></div>
+
+### 4. Удалить задание для самостоятельной работы, которое было создано более года назад
+
+Если дата создания работы + 1 год меньше текущей даты - удаляем её.
+
+```SQL
+DELETE FROM independent_assignment WHERE (date_created + interval '1 year') < now();
+```
+
+
+<div id="запрос-5"></div>
+
+### Добавить новый семестр в учебный год
+
+Под добавлением нового семестра в учебный год принимаем корректировку учебного плана.
+```SQL
+INSERT INTO curriculum(group_id, course_id, semester_id)
+VALUES ('<id группы>', '<id курса>', '<id семестра>');
+```
+  <p align="right">(<a href="#top">наверх</a>)</p>
 
 
 <div id="часть-3"></div>
@@ -367,7 +428,7 @@ CREATE INDEX IF NOT EXISTS ix_teacher_surname
 
 ### 1. Краткое описание приложения
 
-Приложение реализовано с использованием фреймворка `FastAPI`. Краткое описание структуры приложения:
+Приложение реализовано с использованием фреймворков `FastAPI` и `SQLAlchemy`. Краткое описание структуры приложения:
 
   - модели `Pydantic` расположены в папке `src/api/schemas/` и разделены на выходные и входные модели (папки `response` и `request`)
   - описание точек входа api находятся в папке `src/api/routers`
